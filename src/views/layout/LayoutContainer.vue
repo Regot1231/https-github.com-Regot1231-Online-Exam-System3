@@ -1,22 +1,13 @@
 <script setup>
-import {
-  Management,
-  Promotion,
-  UserFilled,
-  User,
-  Crop,
-  EditPen,
-  SwitchButton,
-  CaretBottom
-} from '@element-plus/icons-vue'
-import avatar from '@/assets/default.png'
+import { Management, Promotion, UserFilled,  User,  Crop,  EditPen,  SwitchButton,  CaretBottom } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores';
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router';
 const router = useRouter()
 const userStore = useUserStore()
+const role = ref("teacher")
 onMounted(() => {
-  userStore.getUser()
+  userStore.getUser(role.value)
 })
 const onCommand = async (command) => {
   if (command === 'logout') {
@@ -26,7 +17,6 @@ const onCommand = async (command) => {
       cancelButtonText: '取消'
     })
     userStore.removeToken()
-    userStore.removeRole()
     userStore.setUser({})
     router.push('/login')
   } else {
@@ -37,6 +27,7 @@ const onCommand = async (command) => {
 
 <template>
   <el-container class="layout-container">
+    <!-- 主页侧边栏 -->
     <el-aside width="200px">
       <div class="el-aside__logo"></div>
       <el-menu active-text-color="#ffd04b" background-color="#232323" :default-active="$route.path" text-color="#fff"
@@ -66,12 +57,6 @@ const onCommand = async (command) => {
             </el-icon>
             <span>基本资料</span>
           </el-menu-item>
-          <el-menu-item index="/user/avatar">
-            <el-icon>
-              <Crop />
-            </el-icon>
-            <span>更换头像</span>
-          </el-menu-item>
           <el-menu-item index="/user/password">
             <el-icon>
               <EditPen />
@@ -82,6 +67,7 @@ const onCommand = async (command) => {
       </el-menu>
     </el-aside>
     <el-container>
+      <!-- 主页头部 -->
       <el-header>
         <div>老师用户名:<strong>{{ userStore.user.nickname || userStore.user.username }}</strong></div>
         <el-dropdown placement="bottom-end" @command="onCommand">
@@ -94,17 +80,17 @@ const onCommand = async (command) => {
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item command="profile" :icon="User">基本资料</el-dropdown-item>
-              <el-dropdown-item command="avatar" :icon="Crop">更换头像</el-dropdown-item>
               <el-dropdown-item command="password" :icon="EditPen">重置密码</el-dropdown-item>
               <el-dropdown-item command="logout" :icon="SwitchButton">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
       </el-header>
+      <!-- 主页主体信息 -->
       <el-main>
         <router-view></router-view>
       </el-main>
-      <el-footer> ©2023 Created by 锐鸣进取</el-footer>
+      <el-footer> ©2024 Created by 锐鸣进取</el-footer>
     </el-container>
   </el-container>
 </template>
@@ -118,7 +104,7 @@ const onCommand = async (command) => {
 
     &__logo {
       height: 120px;
-      background: url('@/assets/logo.png') no-repeat center / 120px auto;
+      background: url('@/assets/new_logo2.png') no-repeat center / 250px auto;
     }
 
     .el-menu {

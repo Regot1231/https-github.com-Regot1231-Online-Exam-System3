@@ -3,7 +3,7 @@ import axios from 'axios'
 import router from '@/router'
 import { ElMessage } from 'element-plus'
 
-const baseURL = 'http://big-event-vue-api-t.itheima.net'
+const baseURL = 'http://192.168.105.231:3213'//基地址
 
 const instance = axios.create({
   baseURL,
@@ -15,7 +15,6 @@ instance.interceptors.request.use(
     const userStore = useUserStore()
     if (userStore.token) {
       config.headers.Authorization = userStore.token
-      config.headers['X-User-Role'] = userStore.role
     }
     return config
   },
@@ -24,7 +23,7 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (res) => {
-    if (res.data.code === 0) {
+    if ( res.data.code === 200 ) {
       return res
     }
     ElMessage({ message: res.data.message || '服务异常', type: 'error' })
@@ -41,4 +40,4 @@ instance.interceptors.response.use(
 )
 
 export default instance
-export { baseURL }
+

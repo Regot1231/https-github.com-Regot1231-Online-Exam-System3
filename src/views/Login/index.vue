@@ -15,6 +15,7 @@ const formModel = ref({
   role: ''
 })
 const form = ref()
+// 校验规则
 const rules = {
   username: [
     { required: true, message: '请输入用户名', trigger: 'blur' },//非空
@@ -55,6 +56,8 @@ const isActive = ref(true)
 const toggleActive = () => {
   isActive.value = !isActive.value;
 }
+
+
 // 切换的时候重置
 watch(isRegister, () => {
   formModel.value = {
@@ -64,17 +67,18 @@ watch(isRegister, () => {
     role: ''
   }
 })
+// 登录操作
 const login = async () => {
   await form.value.validate()
-  const res = await userLoginService(formModel.value)
-  console.log(res.data)
-  userStore.setToken(res.data.token)
-  userStore.setRole(formModel.value.role)
+  formModel.value.role = isActive.value ? "teacher" : "student" 
+  const res = await userLoginService(formModel.value)//
+  console.log(formModel.value.role);
+  userStore.setToken(res.data.data)
   ElMessage({ type: 'success', message: '登录成功' })
-  if (formModel.value.role = "teacher") {
-    router.push('/teacher')
-  } else {
+  if (formModel.value.role === "student") {
     router.push('/student')
+  } else {
+    router.push('/teacher')
   }
 }
 </script>
@@ -83,6 +87,7 @@ const login = async () => {
   <el-row class="login-page">
     <el-col :span="12" class="bg"></el-col>
     <el-col :span="6" :offset="3" class="form">
+      <!-- 注册页面 -->
       <el-form :model="formModel" :rules="rules" class="right-form" ref="form" size="large" autocomplete="off"
         v-if="isRegister">
         <el-form-item>
@@ -117,6 +122,7 @@ const login = async () => {
           </el-link>
         </el-form-item>
       </el-form>
+      <!-- 登录页面 -->
       <el-form :model="formModel" :rules="rules" class="right-form" ref="form" size="large" autocomplete="off" v-else>
         <ul class="register-top clearfix">
           <li class="register-top-left leftfix" :class="{ active: !isActive }" @click="toggleActive">
@@ -127,7 +133,7 @@ const login = async () => {
           </li>
         </ul>
         <el-form-item prop="username">
-          <el-input v-model="formModel.username" name="password" :prefix-icon="User" type="password"
+          <el-input v-model="formModel.username" name="password" :prefix-icon="User" 
             placeholder="请输入用户名"></el-input>
         </el-form-item>
         <el-form-item prop="password">
@@ -141,7 +147,7 @@ const login = async () => {
           </div>
         </el-form-item>
         <el-form-item>
-          <el-button class="button" type="primary" auto-insert-space @click="login">登录</el-button>
+          <el-button class="button" type="primary" auto-insert-space @click="login" @keyup.enter="login">登录</el-button>
         </el-form-item>
         <el-form-item class="flex">
           <el-link type="info" :underline="false" @click="isRegister = true">
@@ -161,7 +167,7 @@ const login = async () => {
   background-color: #fff;
 
   .bg {
-    background: url('@/assets/left-bg.jpg') no-repeat center / cover;
+    background: url('@/assets/left-bg.png') no-repeat center / cover;
     background-size: contain;
     /* 确保图片按比例缩放 */
     border-radius: 0 20px 20px 0;
@@ -229,7 +235,7 @@ const login = async () => {
   }
 }
 
-/* 基础设置 reset*/
+/* 基础设置 reset.css*/
 body,
 h1,
 h2,

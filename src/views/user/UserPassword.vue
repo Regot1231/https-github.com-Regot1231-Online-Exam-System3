@@ -86,13 +86,13 @@ const onReset = () => {
           size="large"
         >
           <el-form-item label="原密码" prop="old_pwd">
-            <el-input v-model="pwdForm.old_pwd" type="password"></el-input>
+            <el-input v-model="pwdForm.old_pwd" type="password"  placeholder="请输入您的原密码" clearable></el-input>
           </el-form-item>
           <el-form-item label="新密码" prop="new_pwd">
-            <el-input v-model="pwdForm.new_pwd" type="password"></el-input>
+            <el-input v-model="pwdForm.new_pwd" type="password"  placeholder="请输入您的新密码" clearable></el-input>
           </el-form-item>
           <el-form-item label="确认新密码" prop="re_pwd">
-            <el-input v-model="pwdForm.re_pwd" type="password"></el-input>
+            <el-input v-model="pwdForm.re_pwd" type="password"  placeholder="请输入您的新密码" clearable></el-input>
           </el-form-item>
           <el-form-item>
             <el-button @click="onSubmit" type="primary">修改密码</el-button>

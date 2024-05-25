@@ -11,13 +11,14 @@ const emit = defineEmits(['success'])
 
 const defaultForm = {
   title: '',
-  catename: '',
-  subject: '',
+  catename: '高三二班',
+  subject: '高等代数',
   content: ''
 }
 const formModel = ref({
   ...defaultForm
 })
+const sid = ref()
 const onPublish = async () => {
   formModel.value.sid = sid.value
   if (formModel.value.id) {
@@ -32,7 +33,7 @@ const onPublish = async () => {
     emit('success', 'add')
   }
 }
-const sid = ref()
+
 const formRef = ref()
 const editorRef = ref()
 
@@ -49,11 +50,11 @@ const open = async (row) => {
 }
 const dialogVisible = ref(false)
 const bigcontent = ref([])
-// 点击选题按钮弹出对话框
-const openDialog = async() => {
-   res = await getPaperService(formModel.value.subject)
-   bigcontent.value = res.data.bigcontent
+// 点击选题按钮弹出对话框 
+const openDialog = async () => {
   dialogVisible.value = true
+  const res = await getPaperService(formModel.value.subject)
+  bigcontent.value = res.data.data
 }
 // 定义选择的问题的id
 const selectedQuestionIds = ref([])
@@ -62,18 +63,22 @@ const selectedQuestionIds = ref([])
 defineExpose({
   open
 })
+
+
 // 确认提交的问题的id
 const submit = () => {
-      if (selectedQuestionIds.length > 0) {
-        // 处理选中的题目ID，例如提交到服务器或其他逻辑
-        sid.value =  selectedQuestionIds
-        dialogVisible.value = false;
-      } else {
-        this.$message.error('请选择至少一个题目');
-      }
-    }
-
-
+  if (selectedQuestionIds.value.length > 0) {
+    // 处理选中的题目ID，例如提交到服务器或其他逻辑
+    const selectedArray = bigcontent.value.map(item => 
+        selectedQuestionIds.value.includes(item.id) ? item.id : null
+      )
+    sid.value = selectedArray
+    dialogVisible.value = false;
+    ElMessage({ type: 'success', message: '提交成功' })
+  } else {
+    ElMessage({ type: 'warning', message: '至少选择一道题目' })
+  }
+}
 </script>
 
 <template>
@@ -99,20 +104,18 @@ const submit = () => {
   </el-drawer>
 
   <!-- 弹出选题对话框 -->
-  <el-dialog title="选择题目"  v-model:visible="dialogVisible">
-      <el-checkbox-group v-model="selectedQuestionIds">
-        <el-checkbox v-for="item in formModel.bigcontent" :label="item.id" :key="item.id">
-          {{ item.question }}
-        </el-checkbox>
-      </el-checkbox-group>
-      <template #foot>
-        <span class="dialog-footer">
-          <el-button @click="dialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="submit">提交</el-button>
-        </span>
-      </template>
+  <el-dialog title="选择题目" v-model="dialogVisible">
+    <el-checkbox-group v-model="selectedQuestionIds">
+      <el-checkbox v-for="item in bigcontent" :label="item.question" :value="item.id" :key="item.id"></el-checkbox>
+    </el-checkbox-group>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="submit">提交</el-button>
+      </span>
+    </template>
 
-    </el-dialog>
+  </el-dialog>
 </template>
 
 <style lang="scss" scoped>
