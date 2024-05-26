@@ -8,21 +8,40 @@ const channelList = ref([
     id: 48,
     studentname: "战使部为按如斯",
     catename: "张党解回放把格",
-    dotime: 765278899416,
+    dotime: "70",
     grade: 60,
-    status: 47 
+    status: 47
   }
 ])
+// 时间格式化
+const formatTime = (seconds) => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+
+  const formattedHours = String(hours).padStart(2, '0');
+  const formattedMinutes = String(minutes).padStart(2, '0');
+  const formattedSeconds = String(remainingSeconds).padStart(2, '0');
+
+  return `${formattedHours}时:${formattedMinutes}分:${formattedSeconds}秒`;
+};
+
 channelList.value.forEach(item => {
   item.catename = '沸点工作室'
+  item.dotime = formatTime(parseInt(item.dotime))
 })
 const loading = ref(false)
+
+
 
 const getChannelList = async () => {
   loading.value = true
   const res = await artGetChannelsService()
+  res.data.data.forEach(item => {
+    item.dotime = formatTime(parseInt(item.dotime))
+  })
   channelList.value = res.data.data
-  loading.value = false 
+  loading.value = false
 }
 getChannelList()
 

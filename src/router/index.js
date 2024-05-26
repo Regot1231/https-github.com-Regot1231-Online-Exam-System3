@@ -31,8 +31,8 @@ const router = createRouter({
 
 
 // 登录拦截   测试时先不打开
-// router.beforeEach((to) => {
-//   const useStore = useUserStore()
-//   if (!useStore.token && to.path !== '/login')  return '/login'
-// })
+router.beforeEach((to) => {
+  const useStore = useUserStore()
+  if (!useStore.token && to.path !== '/login')  return '/login'
+})
 export default router

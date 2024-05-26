@@ -3,11 +3,11 @@ import axios from 'axios'
 import router from '@/router'
 import { ElMessage } from 'element-plus'
 
-const baseURL = 'http://192.168.105.231:3213'//基地址
+const baseURL = 'http://192.168.105.231:3299'//基地址
 
 const instance = axios.create({
   baseURL,
-  timeout: 100000
+  timeout: 100000 
 })
 
 instance.interceptors.request.use(
