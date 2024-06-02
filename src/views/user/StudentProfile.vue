@@ -7,11 +7,26 @@ import { ElMessage } from 'element-plus'
 const formRef = ref()
 const role = ref("student")
 const {
-  user: { username, name, gender, mobilephone, jobnumber, academy },
+  user: { username, name, gender, mobilephone, jobnumber, academy, class_name },
   getUser
 } = useUserStore()
-
-const userInfo = ref({ username, name, gender, mobilephone, jobnumber, academy })
+const classAll = ref([
+  { id: 1, name: "计算机2301" },
+  { id: 2, name: "计算机2302" },
+  { id: 3, name: "计算机2303" },
+  { id: 4, name: "计算机2304" },
+  { id: 5, name: "计算机2305" },
+  { id: 6, name: "计算机2306" },
+  { id: 7, name: "计算机2307" },
+  { id: 8, name: "计算机2308" },
+  { id: 9, name: "生信2301" },
+  { id: 10, name: "生信2302" },
+  { id: 11, name: "信科2301" },
+  { id: 12, name: "信科2302" },
+  { id: 13, name: "信科2303" }
+]
+)
+const userInfo = ref({ username, name, gender, mobilephone, jobnumber, academy, class_name })
 // 校验规则
 const rules = {
   name: [
@@ -22,28 +37,12 @@ const rules = {
       trigger: 'blur'
     }
   ],
-  gender: [
-    { required: true, message: '请输入您的性别', trigger: 'blur' },
-  ],
-  mobilephone: [
-    { required: true, message: '请输入您的电话号码', trigger: 'blur' },
-    { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的电话号码', trigger: 'blur' }
-  ],
   jobnumber: [
     { required: true, message: '请输入您的工号或学号', trigger: 'blur' },
     { pattern: /^\d{6}$/, message: '请输入6位数字的工号或学号', trigger: 'blur' }
   ],
-  academy: [
-    { required: true, message: '请输入您的学院名称', trigger: 'blur' },
-    { pattern: /^[\u4e00-\u9fa5a-zA-Z0-9]+$/, message: '学院名称只能包含中英文字符和数字', trigger: 'blur' }
-  ],
-  academy: [
-    { required: true, message: '请输入用户学院', trigger: 'blur' },
-    {
-      pattern: /^\S{2,10}$/,
-      message: '学院必须是2-10位的非空字符串',
-      trigger: 'blur'
-    }
+  class_name: [
+    { required: true, message: '请选择您的班级', trigger: 'blur' },
   ]
 }
 
@@ -83,6 +82,11 @@ const onSubmit = async () => {
           </el-form-item>
           <el-form-item label="学院" prop="academy">
             <el-input v-model="userInfo.academy" placeholder="请输入您的学院" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="班级" prop="class_name">
+            <el-select v-model='userInfo.class_name' placeholder="请选择您的班级" clearable>
+              <el-option v-for="item in classAll" :key="item.id" :label="item.name" :value="item.name" />
+            </el-select>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">提交修改</el-button>

@@ -22,6 +22,7 @@ const router = createRouter({
       children: [
         { path:'/article/manage', name: "article-manage", component: () => import('@/views/article/ArticleManage.vue')},
         { path:'/article/channel', name: "article-channel", component: () => import('@/views/article/ArticleChannel.vue')},
+        { path:'/article/create', name: "article-create", component: () => import('@/views/article/QuestionCreate.vue')},
         { path:'/user/profile', name: "teacher-profile", component: () => import('@/views/user/UserProfile.vue')},
         { path:'/user/password', name: "teacher-password", component: () => import('@/views/user/UserPassword.vue')},
       ] 
@@ -31,8 +32,13 @@ const router = createRouter({
 
 
 // 登录拦截   测试时先不打开
-router.beforeEach((to) => {
+router.beforeEach((to, from, next) => {
   const useStore = useUserStore()
-  if (!useStore.token && to.path !== '/login')  return '/login'
+  if (!useStore.token && to.path !== '/login') {
+    next('/login')
+  } else {
+    next()
+  }                                                      //配置路由守卫跳转！！！
 })
+
 export default router

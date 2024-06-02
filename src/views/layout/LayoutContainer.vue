@@ -38,6 +38,12 @@ const onCommand = async (command) => {
           </el-icon>
           <span>试卷列表</span>
         </el-menu-item>
+        <el-menu-item index="/article/create">
+          <el-icon>
+            <Crop />
+          </el-icon>
+          <span>题目创编</span>
+        </el-menu-item>
         <el-menu-item index="/article/channel">
           <el-icon>
             <Management />

@@ -22,21 +22,11 @@ const rules = {
       trigger: 'blur'
     }
   ],
-  gender: [
-    { required: true, message: '请输入您的性别', trigger: 'blur' },
-  ],
-  mobilephone: [
-    { required: true, message: '请输入您的电话号码', trigger: 'blur' },
-    { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的电话号码', trigger: 'blur' }
-  ],
   jobnumber: [
     { required: true, message: '请输入您的工号或学号', trigger: 'blur' },
     { pattern: /^\d{6}$/, message: '请输入6位数字的工号或学号', trigger: 'blur' }
   ],
-  academy: [
-    { required: true, message: '请输入您的学院名称', trigger: 'blur' },
-    { pattern: /^[\u4e00-\u9fa5a-zA-Z0-9]+$/, message: '学院名称只能包含中英文字符和数字', trigger: 'blur' }
-  ],
+
   subject: [
     { required: true, message: '请输入用户授课学科', trigger: 'blur' },
   ]
@@ -81,7 +71,7 @@ const onSubmit = async () => {
             <el-input v-model="userInfo.academy" placeholder="请输入您的学院" clearable></el-input>
           </el-form-item>
           <el-form-item label="课程" prop="subject">
-            <el-select v-model='userInfo.subject' placeholder="请选择您所授课程或所选课程" clearable>
+            <el-select v-model='userInfo.subject' placeholder="请选择您所授课程或所选课程" clearable multiple>
               <el-option label="数学分析" value="数学分析" />
               <el-option label="高等代数" value="高等代数" />
               <el-option label="大学英语" value="大学英语" />

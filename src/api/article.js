@@ -9,9 +9,9 @@ export const artEditChannelService = (data) => request.put('/my/cate/info', data
 export const artDelChannelService = id => request.delete('/my/cate/del', { params: { id }})
 
 // 管理:获取文章列表
-export const artGetListService = () => request.get('/my/article/list')
+export const artGetListService = ( {pagenum, pagesize} ) => request.get('/my/article/list', { params: { pagenum, pagesize } })
 // 管理：筛选文章列表
-export const artGetFilterListService = (params) => request.get('/my/article/filterlist', { params })
+export const artGetFilterListService = ( { catename, title } ) => request.get('/my/article/filterlist', { params: { catename, title } })
 // 管理:添加文章列表
 export const artPublishService = (data) => request.post('/my/article/add', data)
 // 管理:获取文章详情数据
@@ -22,10 +22,18 @@ export const artEditService = (data) => request.put('/my/article/info', data)
 export const artDelService = (id) => request.delete('/my/article/info', { params: { id } })
 
 // 获取学生试卷
-export const studentGetListService = (subject) => request.get('/my/student/paper', { params: { subject } })
+export const studentGetListService = (data) => request.post('/my/student/paper', data)
 // 提交学生试卷
 export const studentPostPaperService = (data) => request.post('/my/student/submitpaper', data)
 // 查找题库
 export const getPaperService = (subject) => request.get('/my/article/papers', { params: { subject } })
+// 查找题库题目
+export const getPaperAllService = () => request.get('/my/question/papers')
+// 添加题库题目
+export const addPapersService = (data) => request.post('/api/addpapers', data)
+// 编辑题库题目
+export const editPapersService = (data) => request.put('/api/putpapers', data)
+
+
 
  

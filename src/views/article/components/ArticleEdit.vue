@@ -1,19 +1,21 @@
 <script setup>
-import { ref, defineExpose, defineEmits, } from 'vue'
+import { ref, defineExpose, defineEmits, watch } from 'vue'
 import ChannelSelect from './ChannelSelect.vue';//把下拉框配置成一个组件
 import { Plus } from '@element-plus/icons-vue'
 import { artPublishService, artGetDetailService, artEditService, getPaperService } from '@/api/article';
 import { ElMessage } from 'element-plus';
-
+import { useUserStore } from '@/stores';
+const userStore = useUserStore()
 const visibleDrawer = ref(false)
 
 const emit = defineEmits(['success'])
 
 const defaultForm = {
   title: '',
-  catename: '沸点工作室',
-  subject: '高等代数',
-  content: ''
+  catename: '',
+  subject: '',
+  content: '',
+  sugtime: ''
 }
 const formModel = ref({
   ...defaultForm
@@ -33,7 +35,22 @@ const onPublish = async () => {
     emit('success', 'add')
   }
 }
-
+const classAll = ref([
+  { id: 1, name: "计算机2301" },
+  { id: 2, name: "计算机2302" },
+  { id: 3, name: "计算机2303" },
+  { id: 4, name: "计算机2304" },
+  { id: 5, name: "计算机2305" },
+  { id: 6, name: "计算机2306" },
+  { id: 7, name: "计算机2307" },
+  { id: 8, name: "计算机2308" },
+  { id: 9, name: "生信2301" },
+  { id: 10, name: "生信2302" },
+  { id: 11, name: "信科2301" },
+  { id: 12, name: "信科2302" },
+  { id: 13, name: "信科2303" }
+]
+)
 const formRef = ref()
 const editorRef = ref()
 
@@ -46,6 +63,9 @@ const open = async (row) => {
     formModel.value = res.data.data
   } else {
     formModel.value = { ...defaultForm }
+    hours.value = 0
+    minutes.value = 0
+    seconds.value = 0
   }
 }
 const dialogVisible = ref(false)
@@ -69,9 +89,9 @@ defineExpose({
 const submit = () => {
   if (selectedQuestionIds.value.length > 0) {
     // 处理选中的题目ID，例如提交到服务器或其他逻辑
-    const selectedArray = bigcontent.value.map(item => 
-        selectedQuestionIds.value.includes(item.id) ? item.id : null
-      )
+    const selectedArray = bigcontent.value.map(item =>
+      selectedQuestionIds.value.includes(item.id) ? item.id : null
+    )
     sid.value = selectedArray
     dialogVisible.value = false;
     ElMessage({ type: 'success', message: '提交成功' })
@@ -79,6 +99,24 @@ const submit = () => {
     ElMessage({ type: 'warning', message: '至少选择一道题目' })
   }
 }
+
+const hours = ref(0);
+const minutes = ref(0);
+const seconds = ref(0);
+const rules = ref({
+  sugtime: [
+    { required: true, message: '请选择建议完成时间', trigger: 'blur' }
+  ]
+})
+const updateSugtime = () => {
+  formModel.value.sugtime = `${hours.value * 3600 + minutes.value * 60 + seconds.value}`;//  !!双向绑定
+}
+watch(formModel, (newVal) => {
+  const totalSeconds = newVal.sugtime;
+  hours.value = Math.floor(totalSeconds / 3600);
+  minutes.value = Math.floor((totalSeconds % 3600) / 60);
+  seconds.value = totalSeconds % 60;
+}, { deep: true });
 </script>
 
 <template>
@@ -88,14 +126,27 @@ const submit = () => {
       <el-form-item label="试卷名称" prop="title">
         <el-input v-model="formModel.title" placeholder="请输入标题"></el-input>
       </el-form-item>
-      <el-form-item label="试卷出处" prop="catename">
-        <channel-select v-model="formModel.catename" width="100%"></channel-select>
+      <el-form-item label="班级" prop="catename">
+        <el-select v-model='formModel.catename' placeholder="请选择班级" clearable>
+          <el-option v-for="item in classAll" :key="item.id" :label="item.name" :value="item.name" />
+        </el-select>
+      </el-form-item>
+      <!-- 建议完成时间 -->
+      <el-form-item label="建议完成时间" prop="sugtime" :rules="rules">
+        <div>
+          <el-input-number v-model="hours" :min="0" :max="23" label="小时" placeholder="小时"
+            @change="updateSugtime"></el-input-number>
+          :
+          <el-input-number v-model="minutes" :min="0" :max="59" label="分钟" placeholder="分钟"
+            @change="updateSugtime"></el-input-number>
+          :
+          <el-input-number v-model="seconds" :min="0" :max="59" label="秒" placeholder="秒"
+            @change="updateSugtime"></el-input-number>
+        </div>
       </el-form-item>
       <el-form-item label="学科" prop="subject">
         <el-select v-model="formModel.subject" placeholder="选择科目">
-          <el-option label="数学分析" value="数学分析" />
-          <el-option label="高等代数" value="高等代数" />
-          <el-option label="大学英语" value="大学英语" />
+          <el-option v-for="item in userStore.user.subject" :label="item" :value="item" :key="item" />
         </el-select>
       </el-form-item>
       <el-form-item label="试卷题目" prop="content">

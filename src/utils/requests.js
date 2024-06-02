@@ -3,7 +3,7 @@ import axios from 'axios'
 import router from '@/router'
 import { ElMessage } from 'element-plus'
 
-const baseURL = 'http://192.168.105.231:3299'//基地址
+const baseURL = 'http://192.168.184.231:3299'//基地址
 
 const instance = axios.create({
   baseURL,
@@ -30,7 +30,7 @@ instance.interceptors.response.use(
     return Promise.reject(res.data)
   },
   (err) => {
-    ElMessage({ message: err.response.data.message || '服务异常', type: 'error' })
+    ElMessage({ message: err.response.data.message || '服务异常', type: 'error' })   //每一个错误示例都要显示出来！！！
     console.log(err)
     if (err.data.code === 401) {
       router.push('/login')

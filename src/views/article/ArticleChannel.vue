@@ -27,7 +27,7 @@ const formatTime = (seconds) => {
 };
 
 channelList.value.forEach(item => {
-  item.catename = '沸点工作室'
+  item.catename = ''
   item.dotime = formatTime(parseInt(item.dotime))
 })
 const loading = ref(false)
